@@ -1,0 +1,12 @@
+global:
+  podSecurityPolicy:
+    enabled: true
+    useAppArmor: true
+image:
+  tag: v1.3.0
+webhook:
+  image:
+    tag: v1.3.0
+prometheus:
+  enabled: false
+installCRDs: true

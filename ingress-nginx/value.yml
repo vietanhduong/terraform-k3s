@@ -2,3 +2,6 @@ controller:
   nodeSelector:
     kubernetes.io/os: linux
   replicaCount: 1
+
+defaultBackend:
+  enabled: true 
