@@ -32,7 +32,7 @@ the `allowed_ips` (recommended).
 * DATA STORAGE: By default K3S using SQLite to store cluster configuration (instead of etcd in k8s). 
   You can use MySQL, PostgreSQL or etcd. You can read it at here: 
   
-          https://rancher.com/docs/k3s/latest/en/installation/datastore
+        https://rancher.com/docs/k3s/latest/en/installation/datastore
   
   By default I using SQLite to store cluster configuration. But I wrote a 
   terraform file (cuslter/database.tf) to provide Google Cloud SQL (PostgreSQL), you can also 
