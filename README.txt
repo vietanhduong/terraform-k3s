@@ -1,19 +1,60 @@
-# Terraform K3S
+TERRAFORM K3S
+----------------------------------
 
-#### Note: 
-* If you want to connect to the master node from outside internet, run the command below:
-  ```bash
-  $ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san $(curl ipinfo.io/ip)" sh -s -
-  ```
-* Default k3s use **traefik** ingress. If you want use another ingress controller (e.g: nginx ingress) you must remove traefik ingress first. 
-	* Follow this instruction to remove traefik [https://github.com/k3s-io/k3s/issues/1160#issuecomment-561572618](https://github.com/k3s-io/k3s/issues/1160#issuecomment-561572618)
-	* Note that at step 3 have an issue. The correct is: 
-  ```text
-  '--no-deploy' \ 
-  'traefik' \
-  ....
-	```
-* I'm using ingress nginx. So you must provide an external IP by command below:
-  ```bash
-  $ helm upgrade --set controller.service.externalIPs={YOUR_EXTERNAL_IP} ingress-nginx nginx-stable/nginx-ingress -n ingress-nginx
-  ```
+Using terraform to provide a k3s cluster. K3S is developed by Rancher (known for the RKE project). 
+
+K3S is used in small to medium projects at half the cost of other kubernetes services - but you 
+will have to manage more. 
+
+Here, I use Google Cloud Platform (GCP) to deploy K3S. Assuming you are quite familiar with 
+GCP, Kubernetes, Terraform. 
+
+Some configurations you need to keep in mind:
+
+* VM Instance:
+	- Machine Type: e2-medium
+	- Disk Size: 50 GiB
+	- Disk Type: pd-standard
+	- Boot Image: Ubuntu 18.04 
+	- Default nodes:
+		+ master: 01
+		+ worker: 02
+
+* VPC:
+	- Subnetwork: 
+		+ IP range: 10.0.0.0/16
+		+ Second range: 10.1.0.0/16
+		
+Please check supported variables at `./cluster/variables.tf`. 
+To enhance the security of your cluster you should limit ip access to the master-node with 
+the `allowed_ips` (recommended). 
+
+* DATA STORAGE: By default K3S using SQLite to store cluster configuration (instead of etcd in k8s). You can 
+  use MySQL, PostgreSQL or etcd. You can read it here: https://rancher.com/docs/k3s/latest/en/installation/datastore
+  By default I using SQLite to store cluster configuration. But I wrote a terraform file (cuslter/database.tf) 
+  to provide Google Cloud SQL (PostgreSQL), you can also use it by uncommenting them. 
+
+
+# NOTE: 
+* By default k3s use traefik ingress. If you want to use another ingress controller (e.g: ingress-nginx, ambassador, contour, ...)
+  you must remove traefik ingress first. It was disabled in cluster/scripts/master.sh 
+	* Follow this instruction to remove traefik:
+	
+        https://github.com/k3s-io/k3s/issues/1160#issuecomment-561572618
+	
+  * Note that at step 3 have an issue. The correct is: 
+  
+        '--no-deploy' \ 
+        'traefik' \
+        ....
+
+* I'm using ingress-nginx. So you must provide an external IP by command below:
+  
+        $ helm upgrade --set service.externalIPs={YOUR_EXTERNAL_IP} ingress-nginx bitnami/nginx-ingress-controller -n ingress-nginx
+
+  or edit ingress-nginx/value.yaml:
+  
+        service:
+          externalIPs: 
+          - YOUR_EXTERNAL_IP
+						
