@@ -3,8 +3,8 @@ TERRAFORM K3S
 
 Using terraform to provide a k3s cluster. K3S is developed by Rancher (known for the RKE project). 
 
-K3S is used in small to medium projects at half the cost of other kubernetes services - but you 
-will have to manage more. 
+K3S is used in small and medium projects at half the cost of other Kubernetes services - but you 
+have to manage more I think this is a trade-off. 
 
 Here, I use Google Cloud Platform (GCP) to deploy K3S. Assuming you are quite familiar with 
 GCP, Kubernetes, Terraform. 
