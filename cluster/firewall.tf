@@ -1,14 +1,14 @@
 resource "google_compute_firewall" "ssh" {
-  name          = "${var.group_name}-ssh"
-  network       = google_compute_network.vpc.name
-  direction     = "INGRESS"
-  project       = var.project_id
-  source_ranges = ["35.247.163.94/32"]
-
+  name      = "${var.group_name}-ssh"
+  network   = google_compute_network.vpc.name
+  direction = "INGRESS"
+  project   = var.project_id
+	source_ranges = var.allowed_ips
   allow {
     protocol = "tcp"
     ports    = ["22"]
   }
+  target_tags = ["${var.group_name}-master", "${var.group_name}-worker"]
 }
 
 resource "google_compute_firewall" "internal" {
@@ -21,21 +21,20 @@ resource "google_compute_firewall" "internal" {
   allow {
     protocol = "all"
   }
-  source_tags = ["${var.group_name}"]
 }
 
-resource "google_compute_firewall" "cluster" {
-  name          = "${var.group_name}-cluster"
+resource "google_compute_firewall" "master" {
+  name          = "${var.group_name}-master"
   network       = google_compute_network.vpc.name
   direction     = "INGRESS"
   project       = var.project_id
-  source_ranges = ["35.247.163.94/32"]
+  source_ranges = var.allowed_ips
 
   allow {
     protocol = "tcp"
     ports    = ["6443"]
   }
-  source_tags = ["${var.group_name}"]
+  target_tags = ["${var.group_name}-master"]
 }
 
 resource "google_compute_firewall" "ingress" {
@@ -44,7 +43,6 @@ resource "google_compute_firewall" "ingress" {
   direction = "INGRESS"
   project   = var.project_id
   source_ranges = [
-    "35.247.163.94/32",
     "103.21.244.0/22",
     "103.22.200.0/22",
     "103.31.4.0/22",
@@ -66,5 +64,5 @@ resource "google_compute_firewall" "ingress" {
     protocol = "tcp"
     ports    = ["80", "443"]
   }
-  source_tags = ["${var.group_name}"]
+  target_tags = ["${var.group_name}-worker"]
 }

@@ -31,12 +31,15 @@ variable "ssh_key" {
 }
 variable "total_node" {
   type    = number
-  default = 3
+  default = 2
 }
 variable "ip_cidr_range" {
   type = string
 }
-
 variable "ip_cidr_second_range" {
   type = string
+}
+variable "allowed_ips" {
+	type = list(string)
+	default = []
 }

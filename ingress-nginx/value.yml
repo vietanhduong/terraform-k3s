@@ -1,7 +1,3 @@
-controller:
-  nodeSelector:
-    kubernetes.io/os: linux
-  replicaCount: 1
-
-defaultBackend:
-  enabled: true 
+replicaCount: 1
+service:
+  externalIPs:

@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress
@@ -6,18 +6,22 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/acme-challenge-type: http01
+    cert-manager.io/issue-temporary-certificate: "true"
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   tls:
     - hosts:
-        - cluster.anhdv.dev 
-      secretName: tls.cluster.anhdv.dev
+        - k3s.anhdv.dev
+      secretName: tls.k3s.anhdv.dev
   rules:
-    - host: cluster.anhdv.dev
+    - host: k3s.anhdv.dev
       http:
         paths:
           - path: /example
+            pathType: Prefix
             backend:
-              serviceName: example
-              servicePort: 80
+              service:
+                name: example
+                port:
+                  number: 80
