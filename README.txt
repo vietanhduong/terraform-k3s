@@ -71,7 +71,7 @@ the `allowed_ips` (recommended).
           - YOUR_EXTERNAL_IP
 
 ------------------------
-DOCUMENTS REFERENCES:
+DOCUMENT REFERENCE:
   * https://rancher.com/docs/k3s/latest/en/
   * https://bitnami.com/stack/nginx-ingress-controller/helm
   
