@@ -58,8 +58,10 @@ the `allowed_ips` (recommended).
         '--no-deploy' \ 
         'traefik' \
         ....
+        
 - Note that when selecting the IP for LoadBalancer, select the IP of one of the worker nodes. DO NOT use 
   the IP of the master node. 
+
 - I'm using ingress-nginx. So you must provide an external IP by command below:
   
         $ helm upgrade --set service.externalIPs={YOUR_EXTERNAL_IP} ingress-nginx bitnami/nginx-ingress-controller -n ingress-nginx
@@ -70,6 +72,12 @@ the `allowed_ips` (recommended).
           externalIPs: 
           - YOUR_EXTERNAL_IP
 
+- To get the configuration of the cluster, you need to `ssh` to the master node and execute the command below: 
+  
+        $ sudo cat /etc/rancher/k3s/k3s.yaml
+        
+  Tip: You also use `scp` to download this file to your `kubeconfig`
+  
 ------------------------
 DOCUMENT REFERENCE:
   * https://rancher.com/docs/k3s/latest/en/
